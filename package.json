@@ -1,0 +1,66 @@
+{
+  "name": "linkedin-job-analyzer",
+  "version": "1.0.0",
+  "description": "This is a Chrome extension that reads job descriptions on LinkedIn and, using AI, finds the information that interests you.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=production --env mode=production",
+    "start:dev": "webpack --env mode=development",
+    "start:server": "webpack serve --env mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sdaleshin/linkedin-job-analyzer.git"
+  },
+  "author": "sdaleshin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sdaleshin/linkedin-job-analyzer/issues"
+  },
+  "homepage": "https://github.com/sdaleshin/cards-extension#readme",
+  "devDependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/chrome": "^0.0.242",
+    "@types/jsonfile": "^6.1.1",
+    "@types/md5": "^2.3.2",
+    "@types/node": "^17.0.45",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.20",
+    "@types/styled-components": "^5.1.26",
+    "@types/uuid": "^9.0.1",
+    "@types/webpack": "^5.28.1",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "@typescript-eslint/parser": "^5.10.2",
+    "babel-loader": "^8.2.3",
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "jest": "^29.7.0",
+    "jsonfile": "^6.1.0",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "authorized-fetch-refresh": "^1.0.1",
+    "chooui": "^0.0.2",
+    "merkle-json": "^2.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.0.7",
+    "uuid": "^8.3.2"
+  }
+}
