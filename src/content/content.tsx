@@ -7,9 +7,7 @@ function init() {
     const rootElement = document.createElement('div')
     rootElement.id = LINKEDIN_JOB_ANALYZER_ID
     document.body.appendChild(rootElement)
-    const root = createRoot(
-        document.getElementById(LINKEDIN_JOB_ANALYZER_ID),
-    )
+    const root = createRoot(document.getElementById(LINKEDIN_JOB_ANALYZER_ID))
     root.render(<ContentApp />)
 }
 if (document.readyState === 'loading') {

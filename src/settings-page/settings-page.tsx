@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
-import { StartPageApp } from './components/StartPageApp'
+import { SettingsPageApp } from './components/SettingsPageApp'
 
 const root = createRoot(document.getElementById('root'))
 
-root.render(<StartPageApp />)
+root.render(<SettingsPageApp />)

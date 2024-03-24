@@ -18,7 +18,7 @@ export const getConfig = (
         entry: {
             background: './src/background.ts',
             content: './src/content/content.tsx',
-            'start-page': './src/start-page/start-page.tsx',
+            'settings-page': './src/settings-page/settings-page.tsx',
         },
         output: {
             filename: '[name].js',
@@ -35,7 +35,7 @@ export const getConfig = (
                         to: 'images',
                     },
                     {
-                        from: 'src/start-page/index.html',
+                        from: 'src/settings-page/index.html',
                         to: 'index.html',
                     },
                     {

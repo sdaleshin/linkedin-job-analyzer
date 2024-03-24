@@ -3,7 +3,7 @@
     "outDir": "./dist/",
     "noImplicitAny": true,
     "module": "esnext",
-    "target": "es5",
+    "target": "es6",
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
@@ -12,7 +12,7 @@
     "lib": [
       "decorators",
       "dom",
-      "es5",
+      "es6",
       "scripthost",
       "es2015.promise"
     ]
