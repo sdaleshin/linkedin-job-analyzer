@@ -19,6 +19,8 @@ export const getConfig = (
             background: './src/background.ts',
             content: './src/content/content.tsx',
             'settings-page': './src/settings-page/settings-page.tsx',
+            'test-content-script':
+                './src/test-content-script-page/test-content-script.ts',
         },
         output: {
             filename: '[name].js',
@@ -37,6 +39,10 @@ export const getConfig = (
                     {
                         from: 'src/settings-page/index.html',
                         to: 'index.html',
+                    },
+                    {
+                        from: 'src/test-content-script-page/index.html',
+                        to: 'test-content-script-page.html',
                     },
                     {
                         from: 'src/manifest.json',

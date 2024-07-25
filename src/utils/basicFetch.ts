@@ -1,4 +1,4 @@
-export function basicFetch(url, options) {
+export function basicFetch(url: string, options: {}) {
     return fetch(url, {
         ...options,
         mode: 'cors',

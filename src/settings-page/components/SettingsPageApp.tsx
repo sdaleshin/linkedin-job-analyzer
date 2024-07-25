@@ -10,9 +10,9 @@ import {
 } from 'chooui'
 import { useEffect, useState } from 'react'
 import { Question } from './Question'
-import { QuestionModel } from './types'
 import { generateId } from '../../utils/generateId'
 import { QUESTIONS_STORAGE_NAME } from '../../utils/consts'
+import { StoredQuestion } from '../../models/question'
 
 const ContainerDiv = styled.div`
     margin: 0 auto;
@@ -37,7 +37,7 @@ const StyledQuestion = styled(Question)`
 `
 
 export function SettingsPageApp() {
-    const [questions, setQuestions] = useState<QuestionModel[]>()
+    const [questions, setQuestions] = useState<StoredQuestion[]>()
     if (questions) {
         chrome?.storage?.local?.set({ [QUESTIONS_STORAGE_NAME]: questions })
     }
@@ -59,7 +59,7 @@ export function SettingsPageApp() {
         ])
     }
 
-    const handleQuestionChange = (question: QuestionModel) => {
+    const handleQuestionChange = (question: StoredQuestion) => {
         const index = questions.findIndex((q) => q.id === question.id)
         setQuestions([
             ...questions.slice(0, index),

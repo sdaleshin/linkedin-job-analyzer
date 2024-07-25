@@ -1,4 +1,3 @@
-import { QuestionModel } from './types'
 import {
     ButtonColorEnum,
     ButtonSizeEnum,
@@ -7,12 +6,12 @@ import {
     Button,
 } from 'chooui'
 import styled from 'styled-components'
+import { StoredQuestion } from '../../models/question'
 
 const ContentDiv = styled.div`
     display: flex;
     width: 90vw;
 `
-
 const TextInput = styled(Input)`
     flex-grow: 1;
     margin-right: 24px;
@@ -46,10 +45,10 @@ export const Question = ({
     onChange,
     onDelete,
     className,
-}: QuestionModel & {
-    onChange: (question: QuestionModel) => void
+}: StoredQuestion & {
+    onChange: (question: StoredQuestion) => void
     onDelete: (id: string) => void
-    className: string
+    className?: string
 }) => {
     return (
         <ContentDiv className={className}>
@@ -65,9 +64,12 @@ export const Question = ({
             ></TextInput>
             <TypeSelect
                 value={type}
-                onChange={(e) =>
-                    onChange({ id, text, type: e.target.value, short })
-                }
+                onChange={(e) => {
+                    const { value } = e.target
+                    if (value === 'boolean' || value === 'text') {
+                        onChange({ id, text, type: value, short })
+                    }
+                }}
             >
                 <option value="text">text</option>
                 <option value="boolean">yes/no/no data</option>
