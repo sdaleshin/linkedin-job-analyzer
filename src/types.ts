@@ -16,11 +16,18 @@ export type Message =
           payload: QuestionModel[]
       }
     | {
-          action: 'requestQuestions' | 'openQuestionsEditor'
+          action:
+              | 'requestQuestions'
+              | 'openQuestionsEditor'
+              | 'requestSelectors'
       }
     | {
           action: 'analyzeJobDescription'
           payload: JobDescription
+      }
+    | {
+          action: 'selectorsUpdated'
+          payload: string[]
       }
 
 export interface Messenger {

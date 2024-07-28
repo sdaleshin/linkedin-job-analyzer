@@ -45,6 +45,10 @@ export const getConfig = (
                         to: 'test-content-script-page.html',
                     },
                     {
+                        from: 'src/fonts',
+                        to: 'fonts',
+                    },
+                    {
                         from: 'src/manifest.json',
                         to: 'manifest.json',
                         transform(content) {

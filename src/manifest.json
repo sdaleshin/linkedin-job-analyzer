@@ -15,6 +15,12 @@
       "matches": ["*://www.linkedin.com/*"]
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": [ "fonts/*" ],
+      "matches": ["*://www.linkedin.com/*"]
+    }
+  ],
   "action": {},
   "background": {
     "service_worker": "background.js"

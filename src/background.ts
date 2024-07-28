@@ -1,8 +1,9 @@
-import { getAnalyzeJobDescriptionUrb } from './utils/apiUrls'
+import { getAnalyzeJobDescriptionUrl, getSelectorsUrl } from './utils/apiUrls'
 import { basicFetch } from './utils/basicFetch'
 import { QUESTIONS_STORAGE_NAME } from './utils/consts'
 import { JobDescription, Message } from './types'
 import { QuestionModel, StoredQuestion } from './models/question'
+import { generateId } from './utils/generateId'
 
 function sendMessage(tabId: number, message: Message) {
     chrome.tabs.sendMessage(tabId, message)
@@ -26,7 +27,9 @@ chrome.runtime.onMessage.addListener((message: Message, sender) => {
         case 'requestQuestions':
             return sendQuestionsWithStatus(sender.tab.id, 'empty')
         case 'openQuestionsEditor':
-            openQuestionsEditor()
+            return openQuestionsEditor()
+        case 'requestSelectors':
+            return requestSelectors(sender.tab.id)
     }
 })
 
@@ -55,6 +58,8 @@ async function sendQuestionsWithStatus(
     })
 }
 
+let currentAnalyzeId = null
+
 async function analyzeJobDescription({
     jobDescription,
     tabId,
@@ -62,9 +67,11 @@ async function analyzeJobDescription({
     jobDescription: JobDescription
     tabId: number
 }) {
+    let analyzeId = generateId()
+    currentAnalyzeId = analyzeId
     await sendQuestionsWithStatus(tabId, 'progress')
     const storedQuestions = await getQuestionsFromStorage()
-    const response = await basicFetch(getAnalyzeJobDescriptionUrb(), {
+    const response = await basicFetch(getAnalyzeJobDescriptionUrl(), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -74,6 +81,9 @@ async function analyzeJobDescription({
             questions: storedQuestions,
         }),
     })
+    if (analyzeId !== currentAnalyzeId) {
+        return
+    }
     const data = await response.json()
     const parsedData = JSON.parse(
         data.choices[0].message.content
@@ -87,6 +97,9 @@ async function analyzeJobDescription({
         ? parsedData
         : parsedData.questions || parsedData.responses || parsedData.answers
 
+    if (analyzeId !== currentAnalyzeId) {
+        return
+    }
     if (answers?.length > 0) {
         const questions: QuestionModel[] = storedQuestions.map((q) => ({
             ...q,
@@ -101,4 +114,18 @@ async function analyzeJobDescription({
     } else {
         sendQuestionsWithStatus(tabId, 'empty')
     }
+}
+
+async function requestSelectors(tabId: number) {
+    const response = await basicFetch(getSelectorsUrl(), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    const data: string[] = await response.json()
+    sendMessage(tabId, {
+        action: 'selectorsUpdated',
+        payload: data,
+    })
 }

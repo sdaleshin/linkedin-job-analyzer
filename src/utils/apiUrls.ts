@@ -1,14 +1,10 @@
-const baseApiUrl = 'https://api.choodic.com/'
-// const baseApiUrl = 'http://localhost:3000/'
+// const baseApiUrl = 'https://api.choodic.com/'
+const baseApiUrl = 'http://localhost:3000/'
 
-export function getAnalyzeJobDescriptionUrb() {
+export function getAnalyzeJobDescriptionUrl() {
     return baseApiUrl + 'job-analyzer/analyze'
 }
 
-export function getAuthInExtensionUrl() {
-    return baseApiUrl + 'auth/auth-in-extension'
-}
-
-export function getRefreshTokenUrl() {
-    return baseApiUrl + 'auth/refresh-token'
+export function getSelectorsUrl() {
+    return baseApiUrl + 'job-analyzer/selectors'
 }
