@@ -1,5 +1,5 @@
-// const baseApiUrl = 'https://api.choodic.com/'
-const baseApiUrl = 'http://localhost:3000/'
+const baseApiUrl = 'https://api.choodic.com/'
+// const baseApiUrl = 'http://localhost:3000/'
 
 export function getAnalyzeJobDescriptionUrl() {
     return baseApiUrl + 'job-analyzer/analyze'

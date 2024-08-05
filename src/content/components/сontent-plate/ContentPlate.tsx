@@ -1,22 +1,21 @@
 import styled from 'styled-components'
 import {
-    CheckInCircleSvg,
     ChevronDownSvg,
     Colors,
     EditSvg,
     Typography,
     TypographyType,
 } from 'chooui'
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import { Moveable } from '../moveable/Moveable'
 import { NonMoveable } from '../moveable/NonMoveable'
 
-const ContentMoveable = styled(Moveable)`
+const ContentMoveable = styled(Moveable)<{ expanded: boolean }>`
     border-radius: 24px;
     border: 1px solid ${Colors.Gray90};
     background: ${Colors.White};
-    padding: 32px;
-    width: 264px;
+    padding: ${(p) => (p.expanded ? '32px' : '8px 16px')};
+    width: ${(p) => (p.expanded ? '264px' : '97px')};
     box-sizing: border-box;
     cursor: move;
 `
@@ -40,6 +39,7 @@ const StyledChevronDownSvg = styled(ChevronDownSvg)<{ $expanded: boolean }>`
     margin-left: 8px;
     transform: rotate(${({ $expanded }) => ($expanded ? 0 : 180)}deg);
     cursor: pointer;
+    position: absolute;
 `
 
 const TitleTypography = styled(Typography)`
@@ -60,22 +60,27 @@ const ButtonsNonMoveable = styled(NonMoveable)`
 export const ContentPlate = ({
     children,
     onEditClick,
+    expanded,
+    onExpandedChanged,
 }: {
     children: ReactNode
     onEditClick: () => void
+    expanded: boolean
+    onExpandedChanged: (expanded: boolean) => void
 }) => {
-    const [expanded, setExpanded] = useState(true)
     return (
-        <ContentMoveable>
+        <ContentMoveable expanded={expanded}>
             <HeadDiv>
                 <TitleTypography type={TypographyType.BodyLarge}>
-                    Job AI Analyser
+                    {expanded ? 'Job AI Analyser' : 'JAA'}
                 </TitleTypography>
                 <ButtonsNonMoveable>
-                    <span onClick={onEditClick}>
-                        <StyledEditSvg />
-                    </span>
-                    <span onClick={() => setExpanded(!expanded)}>
+                    {expanded && (
+                        <span onClick={onEditClick}>
+                            <StyledEditSvg />
+                        </span>
+                    )}
+                    <span onClick={() => onExpandedChanged(!expanded)}>
                         <StyledChevronDownSvg $expanded={expanded} />
                     </span>
                 </ButtonsNonMoveable>

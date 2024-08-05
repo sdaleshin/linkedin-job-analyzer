@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Linkedin Job Analyzer",
+  "name": "AI Job Analyzer",
   "version": "1.0.0",
   "description": "Reads job descriptions on LinkedIn and, using AI, finds the information that interests you",
 

@@ -5,6 +5,7 @@ import { Messenger } from '../../types'
 import { QuestionList } from './question-list/QuestionList'
 import { QuestionModel } from '../../models/question'
 import { GlobalStyle } from './global-style/GlobalStyle'
+import exp from 'node:constants'
 
 const ContentDiv = styled.div`
     position: fixed;
@@ -17,11 +18,15 @@ const ContentDiv = styled.div`
 `
 
 let lastJobDescription = ''
-const LINKEDIN_JOB_DESCRIPTION_CLASSNAME = 'jobs-description'
+
+const EXPANDED_LOCAL_STORAGE_NAME = 'expanded_linkedin_job_analyzer'
 
 export function ContentApp({ messenger }: { messenger: Messenger }) {
     const [questions, setQuestions] = useState<QuestionModel[]>([])
     const [selectors, setSelectors] = useState<string[]>([])
+    const [expanded, setExpanded] = useState(
+        localStorage.getItem(EXPANDED_LOCAL_STORAGE_NAME) !== 'false',
+    )
     useEffect(() => {
         messenger.addMessageListener((message) => {
             if (message.action === 'questionsUpdated') {
@@ -35,35 +40,53 @@ export function ContentApp({ messenger }: { messenger: Messenger }) {
         messenger.sendMessage({ action: 'requestSelectors' })
     }, [messenger])
     useEffect(() => {
-        const intervalId = selectors?.length
-            ? setInterval(() => {
-                  let jobDescription = ''
-                  selectors.forEach((selector) => {
-                      jobDescription += document
-                          .querySelector(selector)
-                          ?.textContent?.trim()
-                  })
-                  if (jobDescription && jobDescription !== lastJobDescription) {
-                      lastJobDescription = jobDescription
-                      messenger.sendMessage({
-                          action: 'analyzeJobDescription',
-                          payload: { jobDescription },
+        const intervalId =
+            selectors?.length && expanded
+                ? setInterval(() => {
+                      let jobDescription = ''
+                      selectors.forEach((selector) => {
+                          jobDescription += document
+                              .querySelector(selector)
+                              ?.textContent?.trim()
                       })
-                  }
-              }, 100)
-            : null
-        return () => intervalId && clearInterval(intervalId)
-    }, [messenger, selectors])
+                      if (
+                          jobDescription &&
+                          jobDescription !== lastJobDescription
+                      ) {
+                          lastJobDescription = jobDescription
+                          messenger.sendMessage({
+                              action: 'analyzeJobDescription',
+                              payload: { jobDescription },
+                          })
+                      }
+                  }, 100)
+                : null
+        return () => {
+            intervalId && clearInterval(intervalId)
+        }
+    }, [messenger, selectors, expanded])
 
     const handleEditClick = () => {
         messenger.sendMessage({ action: 'openQuestionsEditor' })
+    }
+
+    const handleExpandedChanged = (expanded: boolean) => {
+        localStorage.setItem(
+            EXPANDED_LOCAL_STORAGE_NAME,
+            (!expanded).toString(),
+        )
+        setExpanded(expanded)
     }
 
     return (
         <>
             <GlobalStyle />
             <ContentDiv>
-                <ContentPlate onEditClick={handleEditClick}>
+                <ContentPlate
+                    onEditClick={handleEditClick}
+                    expanded={expanded}
+                    onExpandedChanged={handleExpandedChanged}
+                >
                     <QuestionList questions={questions} />
                 </ContentPlate>
             </ContentDiv>
