@@ -4,6 +4,7 @@ import { QUESTIONS_STORAGE_NAME } from './utils/consts'
 import { JobDescription, Message } from './types'
 import { QuestionModel, StoredQuestion } from './models/question'
 import { generateId } from './utils/generateId'
+import { extractAnswersFromJson } from './utils/extract-answers-from-json'
 
 function sendMessage(tabId: number, message: Message) {
     chrome.tabs.sendMessage(tabId, message)
@@ -12,6 +13,30 @@ function sendMessage(tabId: number, message: Message) {
 function openQuestionsEditor() {
     chrome.tabs.create({ url: 'index.html' })
 }
+
+const DEFAULT_QUESTIONS: StoredQuestion[] = [
+    {
+        id: generateId(),
+        short: 'Visa',
+        type: 'boolean',
+        text: 'Do they provide visa sponsorship?',
+    },
+    {
+        id: generateId(),
+        short: 'Salary',
+        type: 'text',
+        text: 'What is the salary?',
+    },
+]
+
+chrome.runtime.onInstalled.addListener(async function () {
+    const storedQuestions = await getQuestionsFromStorage()
+    if (storedQuestions.length === 0) {
+        chrome?.storage?.local?.set({
+            [QUESTIONS_STORAGE_NAME]: DEFAULT_QUESTIONS,
+        })
+    }
+})
 
 chrome.action.onClicked.addListener(function (tab) {
     openQuestionsEditor()
@@ -35,7 +60,7 @@ chrome.runtime.onMessage.addListener((message: Message, sender) => {
 
 async function getQuestionsFromStorage(): Promise<StoredQuestion[]> {
     const data = await chrome?.storage?.local?.get([QUESTIONS_STORAGE_NAME])
-    return data[QUESTIONS_STORAGE_NAME]
+    return data[QUESTIONS_STORAGE_NAME] ?? []
 }
 
 async function sendQuestionsWithStatus(
@@ -71,6 +96,9 @@ async function analyzeJobDescription({
     currentAnalyzeId = analyzeId
     await sendQuestionsWithStatus(tabId, 'progress')
     const storedQuestions = await getQuestionsFromStorage()
+    if (storedQuestions.length === 0) {
+        return
+    }
     const response = await basicFetch(getAnalyzeJobDescriptionUrl(), {
         method: 'POST',
         headers: {
@@ -93,9 +121,7 @@ async function analyzeJobDescription({
             .replace(/\\"/g, '"'),
     )
 
-    const answers: { id: string; answer: string }[] = Array.isArray(parsedData)
-        ? parsedData
-        : parsedData.questions || parsedData.responses || parsedData.answers
+    const answers = extractAnswersFromJson(parsedData)
 
     if (analyzeId !== currentAnalyzeId) {
         return
